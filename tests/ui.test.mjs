@@ -6,13 +6,19 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { expirationAttribute, remainingAt } from '../public/expiration.js';
 
+const fixtureTimers = new Set();
+test.afterEach(() => {
+  for (const timer of fixtureTimers) clearTimeout(timer);
+  fixtureTimers.clear();
+});
+
 const appSource = (await readFile(join(process.env.TRANSFER_TEST_ROOT || fileURLToPath(new URL('..',import.meta.url)), 'public/app.js'),'utf8')).replace(/^import .*;\n/gm,'').split("els.loginForm.addEventListener")[0];
 function fixture(extra={}) {
   const nodes=new Map();const attrs=[];const navigations=[];const timers=[];
   const node=()=>({textContent:'',hidden:false,disabled:false,dataset:{},style:{},classList:{remove(){},toggle(){}},addEventListener(){},matches(){return true;},closest(){return true;}});
   const document={querySelector(selector){if(!nodes.has(selector))nodes.set(selector,node());return nodes.get(selector);},querySelectorAll(){return attrs;},createElement(){const n=node();Object.defineProperty(n,'innerHTML',{get(){return String(n.textContent).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');}});return n;}};
   const context=createContext({document,navigator:{hardwareConcurrency:8,userAgent:'test'},window:{location:{origin:'https://fixture.invalid',assign:v=>navigations.push(v)}},performance,AbortController,Headers,FormData,TypeError,console,expirationAttribute,remainingAt,
-    setTimeout:(fn,ms)=>{const t=setTimeout(fn,ms);t.unref();timers.push(t);return t;},clearTimeout,
+    setTimeout:(fn,ms)=>{const t=setTimeout(fn,ms);fixtureTimers.add(t);timers.push(t);return t;},clearTimeout,
     fetch:async()=>Response.json({url:'https://fixture.invalid/fresh',nativeUrl:'/transfer/api/share/token/content',sizeBytes:8,etag:'fixture',urlExpiresAt:Date.now()+600000}),
     downloadRanges:async()=>{},...extra});
   runInContext(appSource+'\nglobalThis.app={state,els,runDownload,renderRecent,renderResult,renderShareTarget,updateCountdowns,cancelActiveTransfer};',context);
