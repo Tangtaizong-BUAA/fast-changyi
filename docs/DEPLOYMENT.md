@@ -95,6 +95,10 @@ journalctl -u fast-changyi --since '10 minutes ago'
 
 在自己的环境创建合成测试文件，验证上传完成、三个文件展示入口、中文文件名、公开分享、下载完整哈希、断流恢复及取消。不要以其他用户的真实文件作破坏性测试。
 
+如果下载每次都会切换到浏览器下载，先检查 OSS 实际响应中的 `Access-Control-Expose-Headers` 是否包含 `Content-Range` 和 `ETag`。仅在 curl 或服务端看到 `Content-Range` 不足以证明浏览器 JavaScript 能读取它；缺少暴露配置时，即使 OSS 返回正确的 `206`，下载器也会因无法校验分段而回退。验证时应带上真实站点的 `Origin`、`Range` 和 `If-Match`，并分别检查预检与 GET 响应。
+
+兼容通道经过应用服务器，受其公网出口带宽限制。原生下载管理器本身不代表传输缓慢；应先确认文件字节经过的是 OSS 直连还是服务器中转。浏览器不支持 File System Access API 或拒绝保存权限时，仍会使用兼容通道，这与上述 CORS 配置错误是两类问题。
+
 备份 SQLite、SHARE_SECRET 和环境配置。SQLite 在线备份应使用一致性备份 API，不能只复制运行中的主文件而忽略 WAL。发布时先启动隔离数据目录的预检服务，再原子切换 release；正常代码回滚保留最新业务数据库。
 
 `npm run hash-code` 和 `scripts/aliyun-rpc.mjs` 是原项目的历史辅助工具；前者不会自动给公开接口加访问控制，后者会按输入执行真实 RAM/ECS API 操作，默认部署流程不调用它们。
