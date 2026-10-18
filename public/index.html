@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#FFFFFF">
+    <meta name="description" content="fast-changyi：团队文件上传、分享与稳定下载">
+    <title>fast-changyi · 长翼久安闪传中心</title>
+    <link rel="stylesheet" href="/transfer/styles.css?v=20261009-3">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <h1>长翼久安闪传中心</h1>
+        <button id="logout-button" class="text-button" type="button" hidden>退出</button>
+      </header>
+
+      <main>
+        <section id="access-panel" class="access-panel" aria-labelledby="access-title" hidden>
+          <div class="access-copy">
+            <span class="section-kicker">团队访问</span>
+            <h2 id="access-title">输入访问口令后开始传输</h2>
+            <p>口令只用于进入团队中转区，不会作为文件取件码使用。</p>
+          </div>
+          <form id="login-form" class="login-form">
+            <label for="access-code">团队访问口令</label>
+            <div class="input-group">
+              <input id="access-code" name="code" type="password" autocomplete="current-password" required placeholder="请输入口令">
+              <button class="btn-primary" type="submit">进入</button>
+            </div>
+            <p id="login-message" class="form-message" role="alert" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section id="app-panel" hidden>
+          <div id="share-target" class="share-target" hidden aria-live="polite"></div>
+
+          <div id="upload-progress" class="upload-progress" hidden aria-live="polite">
+            <div class="progress-head">
+              <strong id="progress-name">准备上传</strong>
+              <span id="progress-percent">0%</span>
+            </div>
+            <div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
+            <p id="progress-message" class="progress-message">准备中</p>
+            <button id="cancel-upload-button" class="text-button danger-text" type="button">取消上传</button>
+          </div>
+
+          <section class="control-card" aria-label="文件操作">
+            <div class="command-bar">
+              <button id="upload-button" class="btn-primary" type="button">上传文件</button>
+              <button id="copy-code-button" class="btn-secondary" type="button" disabled>复制取件码</button>
+              <input id="pickup-input" type="text" inputmode="text" autocomplete="off" aria-label="取件码或链接" placeholder="输入取件码或粘贴链接">
+              <button id="resolve-button" class="btn-secondary resolve-button" type="button">取件</button>
+            </div>
+            <input id="file-input" type="file" hidden>
+
+            <div id="latest-result" class="result-card" hidden aria-live="polite">
+              <div class="result-heading">
+                <h3 id="result-name">文件已就绪</h3>
+                <span id="result-countdown" class="countdown" data-expires=""></span>
+              </div>
+              <div class="result-line">
+                <strong id="result-code">—</strong>
+                <button id="copy-link-button" class="link-button" type="button">复制链接</button>
+                <code id="result-link">—</code>
+              </div>
+              <p id="result-message" hidden></p>
+            </div>
+          </section>
+
+          <section class="recent-section" aria-labelledby="recent-title">
+            <div class="recent-heading">
+              <h2 id="recent-title">最近文件</h2>
+              <button id="refresh-button" class="text-button" type="button">刷新</button>
+            </div>
+            <div id="recent-list" class="file-list" aria-live="polite">
+              <div class="empty-state">暂无文件</div>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <script src="/transfer/vendor/aliyun-oss-sdk.min.js" defer></script>
+    <script type="module" src="/transfer/app.js?v=20261009-3"></script>
+  </body>
+</html>

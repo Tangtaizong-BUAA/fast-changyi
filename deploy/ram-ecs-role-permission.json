@@ -1,0 +1,15 @@
+{
+  "Version": "1",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+      "Resource": "acs:ram::<account-id>:role/changyi-transfer-upload-role"
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["oss:GetObject", "oss:DeleteObject", "oss:AbortMultipartUpload"],
+      "Resource": ["acs:oss:*:*:your-oss-bucket/transfer/v1/*"]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "fast-changyi",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Open-source web file transfer with Aliyun OSS, resumable uploads and reliable downloads",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.mjs",
+    "check": "node --check server.mjs && node --check download-grant.mjs && node --check native-download.mjs && node --check public/app.js && node --check public/download.js && node --check public/expiration.js",
+    "test": "node --test tests/*.test.mjs",
+    "hash-code": "node scripts/hash-code.mjs",
+    "postinstall": "node scripts/prepare-vendor.mjs",
+    "prepare-vendor": "node scripts/prepare-vendor.mjs",
+    "check-release": "node scripts/check-release.mjs"
+  },
+  "dependencies": {
+    "ali-oss": "^6.23.0"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Tangtaizong-BUAA/fast-changyi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Tangtaizong-BUAA/fast-changyi/issues"
+  },
+  "homepage": "https://github.com/Tangtaizong-BUAA/fast-changyi#readme"
+}
